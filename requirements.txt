@@ -6,6 +6,7 @@ Django==5.2.4
 django-distill==3.2.7
 gunicorn==23.0.0
 idna==3.10
+myenv==201902.7
 packaging==25.0
 requests==2.32.4
 sqlparse==0.5.3
