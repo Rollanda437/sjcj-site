@@ -5,14 +5,123 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bulletin {{ eleve.prenom }} {{ eleve.nom }} - {{ semestre.get_nom_display }}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
     <style>
-        @media print { body { -webkit-print-color-adjust: exact; font-size: 10px; } .no-print { display: none; } }
-        .header { background: linear-gradient(135deg, #003366, #0055A4); color: white; padding: 20px; border-radius: 12px 12px 0 0; }
-        .table th, .table td { padding: 6px !important; text-align: center; vertical-align: middle; font-size: 11px; }
-        .moyenne-badge { font-size: 1.1rem; padding: 8px 14px; font-weight: bold; }
-        .mention { font-size: 1.8rem; padding: 1.2rem; border-radius: 1.5rem; font-weight: bold; }
-        @media (max-width: 768px) { .table { font-size: 9px; } .mention { font-size: 1.4rem; } }
-    </style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+        font-family: 'Roboto', sans-serif;
+        line-height: 1.7;
+        color: #2c3e50;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: 100vh;
+    }
+
+    h1, h2 {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        color: #1a3d7c;
+        letter-spacing: -0.5px;
+    }
+
+    /* NAVBAR PREMIUM (SANS LOGO) */
+    .navbar {
+        background: linear-gradient(135deg, #1a3d7c 0%, #2c5aa0 100%);
+        color: white; position: fixed; top: 0; width: 100%; z-index: 1000;
+        box-shadow: 0 4px 15px rgba(26, 61, 124, 0.2);
+    }
+
+    .nav-container {
+        max-width: 1200px; margin: 0 auto; padding: 0 1rem;
+        display: flex; justify-content: space-between; align-items: center; height: 70px;
+    }
+
+    .brand-title {
+        font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 1.3rem; color: white; text-decoration: none;
+    }
+
+    .tabs { display: flex; gap: 1.5rem; list-style: none; }
+    .tab {
+        font-family: 'Montserrat', sans-serif; font-weight: 600; letter-spacing: 0.5px;
+        text-transform: uppercase; font-size: 0.9rem; color: white; text-decoration: none;
+        padding: 0.5rem 1rem; border-radius: 6px; transition: background 0.3s;
+    }
+    .tab:hover, .tab.active { background: rgba(255,255,255,0.2); }
+
+    .burger { display: none; flex-direction: column; cursor: pointer; gap: 5px; }
+    .burger span { width: 25px; height: 3px; background: white; border-radius: 3px; transition: 0.3s; }
+    .burger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+    .burger.active span:nth-child(2) { opacity: 0; }
+    .burger.active span:nth-child(3) { transform: rotate(-45deg) translate(7px, -6px); }
+
+    /* CONTENU PARFAITEMENT CENTRÉ */
+    .content {
+        max-width: 1000px;
+        margin: 120px auto 80px;
+        padding: 0 2rem;
+        text-align: center;
+        min-height: calc(100vh - 200px);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .content p {
+        font-size: 1.25rem;
+        color: #2c3e50;
+        max-width: 800px;
+        margin: 1.5rem auto;
+        line-height: 1.8;
+    }
+
+    .btn-custom {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        font-size: 1.4rem;
+        padding: 18px 50px;
+        border-radius: 50px;
+        background: #ff6b6b;
+        color: white;
+        text-decoration: none;
+        display: inline-block;
+        margin-top: 2rem;
+        box-shadow: 0 10px 25px rgba(255,107,107,0.4);
+        transition: all 0.3s;
+    }
+    .btn-custom:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(255,107,107,0.5);
+        background: #ff5252;
+    }
+
+    footer {
+        background: #1a3d7c;
+        color: #ecf0f1;
+        text-align: center;
+        padding: 2rem 0;
+        margin-top: auto;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 500;
+        font-size: 0.95rem;
+    }
+
+    @media (max-width: 992px) {
+        .burger { display: flex; }
+        .tabs {
+            position: absolute; top: 100%; left: 0; width: 100%; background: #1a3d7c;
+            flex-direction: column; gap: 0; max-height: 0; overflow: hidden; transition: max-height 0.4s ease;
+        }
+        .tabs.open { max-height: 500px; padding: 1rem 0; }
+        .tab { padding: 1rem 2rem; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    }
+
+    @media (max-width: 768px) {
+        .content { margin: 100px auto; padding: 0 1.5rem; }
+        .content p { font-size: 1.1rem; }
+        .btn-custom { font-size: 1.2rem; padding: 16px 40px; }
+    }
+</style>
 </head>
 <body class="bg-light">
 <div class="container py-3 py-md-5">
