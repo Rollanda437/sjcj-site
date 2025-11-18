@@ -74,9 +74,9 @@
                             <td>{{ note.inter2|floatformat:2|default:"—" }}</td>
                             <td>{{ note.inter3|floatformat:2|default:"—" }}</td>
                             <td>{{ note.inter4|floatformat:2|default:"—" }}</td>
+                            <td class="fw-bold">{{ note.moyenne_interrogations|floatformat:2|default:"—" }}</td>
                             <td>{{ note.devoir1|floatformat:2|default:"—" }}</td>
                             <td>{{ note.devoir2|floatformat:2|default:"—" }}</td>
-                            <td class="fw-bold">{{ note.moyenne_interrogations|floatformat:2|default:"—" }}</td>
                             <td class="fw-bold">{{ note.moyenne_devoirs|floatformat:2|default:"—" }}</td>
                             <td class="fw-bold">
                                 <span class="badge bg-{% if note.moyenne_semestre >= 16 %}success{% elif note.moyenne_semestre >= 12 %}warning{% elif note.moyenne_semestre >= 10 %}info{% else %}danger{% endif %} moyenne-badge">
