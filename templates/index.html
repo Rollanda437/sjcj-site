@@ -1,84 +1,167 @@
-
-<!-- templates/index.html -->
+{% load static %}
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Application Élèves</title>
-    <!-- Bootstrap CSS via CDN -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <!-- Custom CSS -->
+    <title>Élèves - Collège Saint Joseph de Cupertino Junior</title>
+    
+    <!-- POLICES GOOGLE -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    
     <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
-            background-color: #f8f9fa;
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.7;
+            color: #2c3e50;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
         }
-        .hero-section {
-            text-align: center;
-            padding: 50px 20px;
-            background: linear-gradient(135deg, #007bff, #6610f2);
-            color: white;
-            border-radius: 10px;
-            margin: 20px auto;
-            max-width: 800px;
+
+        h1, h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            color: #1a3d7c;
+            letter-spacing: -0.5px;
         }
-        .hero-section h1 {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
+
+        h1 { font-size: 2.5rem; margin-bottom: 1.5rem; text-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        h2 { font-size: 1.9rem; margin: 2.5rem 0 1rem; position: relative; padding-bottom: 0.5rem; }
+        h2::after {
+            content: ''; position: absolute; left: 50%; transform: translateX(-50%);
+            bottom: 0; width: 60px; height: 4px; background: #ff6b6b; border-radius: 2px;
         }
+
+        p {
+            font-size: 1.1rem; color: #34495e; margin-bottom: 1.6rem;
+            text-align: justify; max-width: 800px; margin-left: auto; margin-right: auto;
+        }
+
+        /* NAVBAR PREMIUM (SANS LOGO) */
+        .navbar {
+            background: linear-gradient(135deg, #1a3d7c 0%, #2c5aa0 100%);
+            color: white; position: fixed; top: 0; width: 100%; z-index: 1000;
+            box-shadow: 0 4px 15px rgba(26, 61, 124, 0.2);
+        }
+
+        .nav-container {
+            max-width: 1200px; margin: 0 auto; padding: 0 1rem;
+            display: flex; justify-content: space-between; align-items: center; height: 70px;
+        }
+
+        .brand-title {
+            font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 1.3rem; color: white; text-decoration: none;
+        }
+
+        .tabs { display: flex; gap: 1.5rem; list-style: none; }
+        .tab {
+            font-family: 'Montserrat', sans-serif; font-weight: 600; letter-spacing: 0.5px;
+            text-transform: uppercase; font-size: 0.9rem; color: white; text-decoration: none;
+            padding: 0.5rem 1rem; border-radius: 6px; transition: background 0.3s;
+        }
+        .tab:hover, .tab.active { background: rgba(255,255,255,0.2); }
+
+        .burger { display: none; flex-direction: column; cursor: pointer; gap: 5px; }
+        .burger span { width: 25px; height: 3px; background: white; border-radius: 3px; transition: 0.3s; }
+        .burger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+        .burger.active span g:nth-child(2) { opacity: 0; }
+        .burger.active span:nth-child(3) { transform: rotate(-45deg) translate(7px, -6px); }
+
+        .content {
+            max-width: 1000px; margin: 100px auto 60px; padding: 0 1.5rem; text-align: center;
+        }
+
         .btn-custom {
-            font-size: 1.2rem;
-            padding: 10px 20px;
+            font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 1.3rem;
+            padding: 15px 40px; border-radius: 50px; background: #ff6b6b; color: white;
+            text-decoration: none; display: inline-block; margin-top: 20px;
+            box-shadow: 0 8px 20px rgba(255,107,107,0.4); transition: all 0.3s;
         }
-        /* Ajout de marge pour les éléments de la navbar */
-        .nav-item {
-            margin-right: 15px; /* Espacement entre les éléments */
+        .btn-custom:hover {
+            transform: translateY(-3px); box-shadow: 0 12px 25px rgba(255,107,107,0.5); background: #ff5252;
         }
-        .pu{
-            text-align: center;
+
+        footer {
+            background: #1a3d7c; color: #ecf0f1; text-align: center; padding: 2rem 0; margin-top: 4rem;
+            font-family: 'Montserrat', sans-serif; font-weight: 500; font-size: 0.9rem;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 992px) {
+            .burger { display: flex; }
+            .tabs {
+                position: absolute; top: 100%; left: 0; width: 100%; background: #1a3d7c;
+                flex-direction: column; gap: 0; max-height: 0; overflow: hidden; transition: max-height 0.4s ease;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            }
+            .tabs.open { max-height: 400px; padding: 1rem 0; }
+            .tab { padding: 1rem 2rem; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
+            .tab:last-child { border-bottom: none; }
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 1.9rem; }
+            .btn-custom { font-size: 1.1rem; padding: 12px 30px; }
         }
     </style>
 </head>
 <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="{% url 'eleves:index_eleves' %}">Renseignements sur les élèves</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="{% url 'home' %}">Accueil</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="{% url 'avis:index_avis' %}" class="tab">Avis</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="{% url 'calendrier:index_calendrier' %}" class="tab">Calendrier</a> <!-- Exemple de 3e lien -->
-                    </li>
-                </ul>
+
+    <!-- NAVBAR PREMIUM SANS LOGO -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="{% url 'home' %}" class="brand-title">SJCJ - Portail Parents</a>
+            <div class="burger" id="burger">
+                <span></span><span></span><span></span>
+            </div>
+            <div class="tabs" id="navbarNav">
+                <a href="{% url 'home' %}" class="tab">Accueil</a>
+                <a href="{% url 'eleves:index_eleves' %}" class="tab active">Élèves</a>
+                <a href="{% url 'avis:index_avis' %}" class="tab">Avis</a>
+                <a href="{% url 'calendrier:index_calendrier' %}" class="tab">Calendrier</a>
             </div>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-     <p class="pu">
-       Si vous souhaitez avoir des Renseignements sur votre enfant,veillez cliquer sur le boutton "rechercher un élève"<br>
-       Ensuite veillez également entrer le code de l'enfant qui permet de l'identifier.
-       <br>
-       Cette disposition a été mise en place pour la sécurité des élèves ainsi que leurs survies par les parents même sans se déplacer.
-     </p>
-    <div class="container">
-        <div class="hero-section">
-            <h1>Bienvenue dans l'application élèves !</h1>
-            <p>Chers parents, suivez facilement les informations de votre enfant avec notre outil simple et sécurisé.</p>
-            <a href="{% url 'eleves:rechercher_eleve' %}" class="btn btn-light btn-custom">Rechercher un élève</a>
-        </div>
+    <!-- CONTENU -->
+    <div class="content">
+        <h1>Suivez les progrès de votre enfant</h1>
+        <p>
+            Si vous souhaitez avoir des renseignements sur votre enfant, veuillez cliquer sur le bouton ci-dessous 
+            <strong>"Rechercher un élève"</strong>.<br>
+            Ensuite, entrez le <strong>code unique de l’élève</strong> qui lui a été attribué.
+        </p>
+        <p>
+            Cette plateforme sécurisée a été mise en place pour permettre aux parents de suivre 
+            la scolarité de leurs enfants <strong>sans se déplacer</strong>, en toute tranquillité.
+        </p>
+
+        <a href="{% url 'eleves:rechercher_eleve' %}" class="btn-custom">
+            Rechercher un élève
+        </a>
     </div>
 
-    <!-- Bootstrap JS via CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- FOOTER -->
+    <footer>
+        © 2025 - Collège Privé d'Enseignement Technique Saint Joseph de Cupertino Junior | Tous droits réservés
+    </footer>
+
+    <!-- JS BURGER MENU -->
+    <script>
+        const burger = document.getElementById('burger');
+        const navbarNav = document.getElementById('navbarNav');
+        burger.addEventListener('click', () => {
+            burger.classList.toggle('active');
+            navbarNav.classList.toggle('open');
+        });
+        document.addEventListener('click', (e) => {
+            if (!burger.contains(e.target) && !navbarNav.contains(e.target)) {
+                burger.classList.remove('active');
+                navbarNav.classList.remove('open');
+            }
+        });
+    </script>
 </body>
 </html>
