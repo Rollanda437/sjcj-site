@@ -54,12 +54,18 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'gestion_ecole.wsgi.application'
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+# === FIREBASE FIRESTORE ===
+try:
+    from firebase_config import db
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
+    FIREBASE_DB = db
+except:
+    pass  # Fallback local
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
