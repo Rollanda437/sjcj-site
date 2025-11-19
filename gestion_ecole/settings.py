@@ -145,3 +145,8 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'gestion_ecole.settings')
 application = get_wsgi_application()
 LOGIN_URL = '/users/login/'
 
+
+# Vercel fix
+import os
+if 'VERCEL' in os.environ:
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
