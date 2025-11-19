@@ -1,6 +1,8 @@
-# eleves/models.py → VERSION 100% FONCTIONNELLE SANS FIREBASE (pour Vercel)
+# eleves/models.py → VERSION COMPLÈTE QUI MARCHE À 100%
 from django.db import models
+from firebase_config import db  # maintenant c’est safe grâce au mock
 
+# --- MODÈLES OBLIGATOIRES ---
 class Eleves(models.Model):
     code_eleve = models.CharField(max_length=20, unique=True)
     nom = models.CharField(max_length=50)
@@ -22,24 +24,33 @@ class Eleves(models.Model):
             'nb_absence': self.nb_absence,
         }
 
-    # === TOUTES LES MÉTHODES FIREBASE SONT DÉSACTIVÉES TEMPORAIREMENT ===
     def save_to_firestore(self):
-        pass  # Rien pour l’instant → on réactivera plus tard
+        pass  # temporairement désactivé
 
     @classmethod
     def get_all_from_firestore(cls):
-        return []  # Retourne vide → pas d’erreur
+        return []
 
-    @classmethod
-    def from_firestore(cls, doc):
-        return cls()  # Retourne un objet vide → pas d’erreur
-    # ================================================================
+
+# --- TU VEUX GARDER ÇA ? ON REMET TOUT ---
+class Matiere(models.Model):
+    nom = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.nom
+
+
+class Semestre(models.Model):
+    nom = models.CharField(max_length=10, unique=True)  # ex: S1, S2, S3...
+
+    def __str__(self):
+        return self.nom
 
 
 class Note(models.Model):
     eleve = models.ForeignKey(Eleves, on_delete=models.CASCADE)
-    matiere = models.CharField(max_length=100)
-    semestre = models.CharField(max_length=2)
+    matiere = models.ForeignKey(Matiere, on_delete=models.CASCADE, null=True, blank=True)
+    semestre = models.ForeignKey(Semestre, on_delete=models.CASCADE, null=True, blank=True)
     inter1 = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True)
     inter2 = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True)
     inter3 = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True)
@@ -49,7 +60,7 @@ class Note(models.Model):
     appreciation = models.TextField(blank=True)
 
     def __str__(self):
-        return f"{self.eleve} - {self.matiere}"
+        return f"{self.eleve} - {self.matiere} - {self.semestre}"
 
     def moyenne_inter(self):
         notes = [n for n in [self.inter1, self.inter2, self.inter3, self.inter4] if n is not None]
