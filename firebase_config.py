@@ -1,22 +1,21 @@
-class MockDoc:
-    def set(self, data): pass
-    def update(self, data): pass
-    def delete(self): pass
-    def get(self): return self
+import os
+import json
+import firebase_admin
+from firebase_admin import credentials, firestore
 
-class MockCollection:
-    def document(self, id=None): return MockDoc()
-    def add(self, data): return (None, None)
-    def stream(self): return []
-    def where(self, *args, **kwargs): return self
-    def order_by(self, *args, **kwargs): return self
-    def limit(self, n): return self
-    def get(self): return []
+# Sur Vercel → on prend la clé depuis l’environnement (SÉCURISÉ)
+if os.getenv('FIREBASE_SERVICE_ACCOUNT'):
+    service_account_info = json.loads(os.getenv('FIREBASE_SERVICE_ACCOUNT'))
+    cred = credentials.Certificate(service_account_info)
+# Sur ton ordi en local → fallback sur le fichier (pratique pour tester)
+elif os.path.exists('sjcj-firebase-key.json'):
+    cred = credentials.Certificate('sjcj-firebase-key.json')
+else:
+    raise Exception("Firebase : aucune clé trouvée – ajoute FIREBASE_SERVICE_ACCOUNT sur Vercel ou le fichier local")
 
-class MockDB:
-    def collection(self, name): return MockCollection()
+# Initialise une seule fois
+if not firebase_admin._apps:
+    firebase_admin.initialize_app(cred)
 
-# LE SEUL ET UNIQUE db DU PROJET
-db = MockDB()
-
-print("Firebase MOCK activé – site 100% stable")
+db = firestore.client()
+print("Firebase CONNECTÉ EN MODE RÉEL – tout est bon !!")
