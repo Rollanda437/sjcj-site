@@ -1,14 +1,18 @@
 import os
 from pathlib import Path
+from django.core.management.utils import get_random_secret_key
 
+# Build paths
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-change-me'
+# ==================== SÉCURITÉ & VERCEL ====================
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', get_random_secret_key())
+DEBUG = os.getenv('DJANGO_DEBUG', 'False') == 'True'
 
-DEBUG = True
+# La ligne magique qui règle TOUT sur Vercel
+ALLOWED_HOSTS = ['*']   # Temporaire, on remettra propre après le premier login
 
-ALLOWED_HOSTS = ['*']
-
+# ==================== APPLICATIONS ====================
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -16,17 +20,18 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
     'eleves',
     'avis',
     'calendrier',
-    'django_distill'
+    'django_distill',
 ]
 
+# ==================== MIDDLEWARE ====================
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',        # Obligatoire Vercel
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -54,8 +59,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'gestion_ecole.wsgi.application'
 
-
-# Base de données
+# ==================== BASE DE DONNÉES ====================
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
@@ -63,90 +67,20 @@ DATABASES = {
     }
 }
 
+# ==================== INTERNATIONALISATION ====================
 LANGUAGE_CODE = 'fr-fr'
 TIME_ZONE = 'Africa/Porto-Novo'
 USE_I18N = True
 USE_TZ = True
 
+# ==================== STATIC (Vercel) ====================
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-import os
-from pathlib import Path
-BASE_DIR = Path(__file__).resolve().parent.parent
 
-ALLOWED_HOSTS = [
-    'localhost',
-    '127.0.0.1',
-    'sjcj-site.vercel.app',        # ← ton site Vercel
-    '.vercel.app',                  # ← pour tous les sous-domaines Vercel (recommandé)
-]
-
-DEBUG = False
-
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
-}
-
-STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATIC_URL = '/static/'
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    # ... le reste de tes middlewares
-]
-SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-insecure-change-me')
-import os
-from pathlib import Path
-from django.core.management.utils import get_random_secret_key
-BASE_DIR = Path(__file__).resolve().parent.parent
-SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', get_random_secret_key())
-DEBUG = os.getenv('DJANGO_DEBUG', 'False') == 'True'
-ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', 'localhost').split(',')
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
-}
-STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATIC_URL = '/static/'
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    # ... le reste de tes middlewares
-]   
-import os
-from django.core.wsgi import get_wsgi_application   
-
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'gestion_ecole.settings')
-application = get_wsgi_application()
+# ==================== ADMIN URL SECRÈTE ====================
+# Tu gardes ça
 LOGIN_URL = '/users/login/'
-
-
-# Vercel fix
-import os
-if 'VERCEL' in os.environ:
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-    
-ADMIN_ENABLED = True
-if ADMIN_ENABLED:
-    INSTALLED_APPS += ['django.contrib.admin']
-    MIDDLEWARE += ['django.contrib.sessions.middleware.SessionMiddleware',
-                   'django.contrib.auth.middleware.AuthenticationMiddleware',
-                   'django.contrib.messages.middleware.MessageMiddleware',] 
-     
-# Fin Vercel fix
