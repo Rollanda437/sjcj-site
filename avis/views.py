@@ -1,5 +1,4 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.decorators import login_required
 from .models import Avis, Commentaire
 from .forms import AvisForm, CommentaireForm
 
@@ -10,7 +9,6 @@ def index_avis(request):
 
 
 # 📰 Liste + ajout d’un avis
-@login_required
 def liste_avis(request):
     avis_liste = Avis.objects.order_by('-date_publication')
 
