@@ -136,3 +136,5 @@ LOGIN_URL = '/users/login/'
 import os
 if 'VERCEL' in os.environ:
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+    
+ADMIN_ENABLED = True

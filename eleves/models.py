@@ -1,7 +1,6 @@
 # eleves/models.py → VERSION COMPLÈTE QUI MARCHE À 100%
 from django.db import models
-from firebase_config import db  # maintenant c’est safe grâce au mock
-
+from django.contrib import admin
 # --- MODÈLES OBLIGATOIRES ---
 class Eleves(models.Model):
     code_eleve = models.CharField(max_length=20, unique=True)
