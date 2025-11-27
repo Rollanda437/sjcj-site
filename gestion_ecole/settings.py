@@ -1,31 +1,13 @@
 import os
-from pathlib import Path
 import shutil
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-# Répertoire temporaire où Vercel permet d’écrire
-WRITABLE_DIR = os.environ.get('VERCEL_TMP', '/tmp')
-if not os.path.exists(WRITABLE_DIR):
-    WRITABLE_DIR = '/tmp'
-    os.makedirs(WRITABLE_DIR, exist_ok=True)
+from pathlib import Path
 
-# Chemin final de la base
-DB_PATH = os.path.join(WRITABLE_DIR, 'db.sqlite3')
+# Build paths
+BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Copie depuis la racine si elle existe et que /tmp est vide
-LOCAL_DB = os.path.join(BASE_DIR, 'db.sqlite3')
-if os.path.exists(LOCAL_DB) and not os.path.exists(DB_PATH):
-    try:
-        shutil.copy(LOCAL_DB, DB_PATH)
-        # On donne les droits d'écriture (parfois nécessaire)
-        os.chmod(DB_PATH, 0o666)
-    except Exception as e:
-        pass  # Si ça échoue, on continue quand même
-
-SECRET_KEY = 'django-insecure-change-me'  # Change ça plus tard
-
+SECRET_KEY = 'django-insecure-change-me-2025'  # À changer plus tard
 DEBUG = True
-
-ALLOWED_HOSTS = ['*']  # Temporaire pour Vercel, on nettoie après
+ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -48,7 +30,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 ROOT_URLCONF = 'gestion_ecole.urls'
 
 TEMPLATES = [
@@ -69,10 +51,11 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'gestion_ecole.wsgi.application'
 
+# BASE DE DONNÉES – VERSION QUI MARCHE À TOUS LES COUPS SUR VERCEL
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': '/tmp/db.sqlite3',           # LE SEUL ENDROIT OÙ ON PEUT ÉCRIRE
+        'NAME': '/tmp/db.sqlite3',
         'USER': '',
         'PASSWORD': '',
         'HOST': '',
@@ -80,17 +63,25 @@ DATABASES = {
     }
 }
 
-# On copie la base du projet vers /tmp au démarrage si elle n’existe pas
-if not os.path.exists('/tmp/db.sqlite3'):
-    import shutil
-    shutil.copy('db.sqlite3', '/tmp/db.sqlite3')
+# Copie automatique de la base (si elle existe à la racine) VERS /tmp
+LOCAL_DB_PATH = BASE_DIR / 'db.sqlite3'
+TMP_DB_PATH = Path('/tmp/db.sqlite3')
+
+if LOCAL_DB_PATH.exists() and not TMP_DB_PATH.exists():
+    try:
+        shutil.copy(str(LOCAL_DB_PATH), str(TMP_DB_PATH))
+        os.chmod(str(TMP_DB_PATH), 0o666)  # droits d'écriture
+    except Exception as e:
+        print("Copie DB échouée, on continue sans :", e)
+
+# Static files
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [BASE_DIR / 'static']
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 LANGUAGE_CODE = 'fr-fr'
 TIME_ZONE = 'Africa/Porto-Novo'
 USE_I18N = True
 USE_TZ = True
-
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / 'static']
-STATIC_ROOT = BASE_DIR / 'staticfiles'
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
