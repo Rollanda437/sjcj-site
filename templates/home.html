@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}Collège Saint Joseph de Cupertino Junior{% endblock %}</title>
-
+     <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
     <!-- POLICES GOOGLE -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
 </head>
@@ -216,7 +216,7 @@ footer {
     <nav class="navbar" id="navbar">
         <div class="nav-container">
             <a href="/" class="logo">
-                <img src="/templates/images/SJCJ.png" alt="Logo">
+                <img src="/static/images/SJCJ.png" alt="Logo">
             </a>
             <div class="burger" id="burger">
                 <span></span>
@@ -294,7 +294,7 @@ footer {
     </script>
     <script type="module">
         // Charge et initialise Firebase
-        import { db } from "./js/firebase-init.js";
+        import { db } from "./// supprimé – plus utilisé";
         window.db = db; // on le rend global pour que tes autres JS puissent l'utiliser
         console.log("Firestore est prêt → window.db");
    </script>
