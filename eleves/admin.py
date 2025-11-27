@@ -1,26 +1,37 @@
-# eleves/admin.py – VERSION ULTIME : tu remplis tout comme dans Excel
 from django.contrib import admin
-from .models import Eleves, Note
+from .models import Eleves, Note, Matiere, Classe, Semestre
 
 class NoteInline(admin.TabularInline):
     model = Note
     extra = 0
-    fields = ('matiere', 'interro1', 'interro2', 'interro3', 'interro4',
-              'devoir1', 'devoir2', 'appreciation')
-    # Tu peux tout modifier ici !
-    readonly_fields = ()  # RIEN n’est en lecture seule → tu modifies tout
+    fields = (
+        'matiere',
+        'semestre',
+        'inter1', 'inter2', 'inter3', 'inter4',
+        'devoir1', 'devoir2',
+        'appreciation'
+    )
+    autocomplete_fields = ['matiere']
+    # Tu peux tout modifier, rien n’est bloqué
+    readonly_fields = ()
 
-    # Style magnifique (comme ton bulletin)
     class Media:
-        css = {'all': ('css/admin_bulletin.css',)}
+        css = {'all': ('css/admin_bulletin.css',)}  # si tu veux la gardée
+
 
 @admin.register(Eleves)
 class ElevesAdmin(admin.ModelAdmin):
-    list_display = ('nom_complet', 'classe', 'code_eleve')
-    search_fields = ('nom', 'prenom', 'code_eleve')
+    list_display = ('code_eleve', 'prenom', 'nom', 'classe', 'nb_absence', 'nb_retard')
     list_filter = ('classe',)
-    inlines = [NoteInline]   # ← TOUTES LES NOTES D’UN ÉLÈVE S’AFFICHENT ICI
+    search_fields = ('code_eleve', 'prenom', 'nom')
+    inlines = [NoteInline]
+    ordering = ('code_eleve',)
 
-    def nom_complet(self, obj):
-        return f"{obj.prenom} {obj.nom.upper()}"
-    nom_complet.short_description = "Élève"
+    def get_readonly_fields(self, request, obj=None):
+        return []  # tout est modifiable
+
+
+# Bonus : on enregistre aussi les autres modèles pour qu’ils apparaissent bien
+admin.site.register(Classe)
+admin.site.register(Matiere)
+admin.site.register(Semestre)
