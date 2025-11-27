@@ -2,7 +2,7 @@
   "version": 2,
   "builds": [
     {
-      "src": "gestion_ecole/wsgi.py",
+      "src": "api/wsgi.py",
       "use": "@vercel/python",
       "config": { "maxLambdaSize": "10mb" }
     },
@@ -13,6 +13,6 @@
   ],
   "routes": [
     { "src": "/static/(.*)", "dest": "/static/$1" },
-    { "src": "/(.*)", "dest": "gestion_ecole/wsgi.py" }
+    { "src": "/(.*)", "dest": "/api/wsgi.py" }
   ]
 }
