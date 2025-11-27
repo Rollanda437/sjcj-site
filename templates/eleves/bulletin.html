@@ -116,48 +116,48 @@
 </div>
 </body>
 <script>
- // Affiche les matières manquantes même si Django n’a pas encore de notes
-    document.addEventListener("DOMContentLoaded", () => {
-        const tbody = document.querySelector("table tbody");
-        if (!tbody) return;
+// Affiche les matières manquantes même si Django n’a pas encore de notes
+ document.addEventListener("DOMContentLoaded", () => {
+    const tbody = document.querySelector("table tbody");
+    if (!tbody) return;
 
-        // Si déjà des notes → on ne touche à rien
-        if (tbody.querySelector("tr td:not(.text-muted)")?.textContent.trim() !== "Aucune note saisie") {
-            return;
-        }
+    // Si déjà des notes → on ne touche à rien
+    if (tbody.querySelector("tr td:not(.text-muted)")?.textContent.trim() !== "Aucune note saisie") {
+        return;
+    }
 
-        // Récupère la classe depuis le titre
-        const titre = document.querySelector("h3")?.textContent || "";
-        const match = titre.match(/(1ere F4|2nde F4|Tle F4|2nde IMI|Tle IMI|Tle F3|2nde FC|1ere HR|2nde F3)/i);
-        if (!match) return;
-        const classe = match[0].toUpperCase().replace("ERE", "ère");
+    // Récupère la classe depuis le titre
+    const titre = document.querySelector("h3")?.textContent || "";
+    const match = titre.match(/(1ere F4|2nde F4|Tle F4|2nde IMI|Tle IMI|Tle F3|2nde FC|1ere HR|2nde F3)/i);
+    if (!match) return;
+    const classe = match[0].toUpperCase().replace("ERE", "ère");
 
-        const MATIERES = {
-            "1ÈRE F4": ["FRANÇAIS","ANGLAIS","MATH","PCT","RDM","PE","DESSIN","SMC","TP","METRE","HYGIENE","PC"],
-            "2NDE F4": ["FRANÇAIS","ANGLAIS","MATH","PHYSIQUE","DESSIN","INFORMATIQUE","TM/TC","TP","MECANIQUE","PREVENTION","LEGIS"],
-            "TLE F4":  ["FRANÇAIS","ANGLAIS","MATH","PCT","RDM","PE","DESSIN","METRE","PC","BA","TP","LEGIS"],
-            "2NDE IMI": ["FRANÇAIS","ANGLAIS","MATH","EB","LA","AS","SEV","SER","ALGO","MATH APPLIQUE","LEGIS"],
-            "TLE IMI":  ["FRANÇAIS","ANGLAIS","MATH","EB","RESEAU","RP","MATH APPLIQUÉ","LEGIS","BD","PG","ELEC"],
-            "TLE F3":   ["FRANÇAIS","ANGLAIS","MATH","PHYSIQUE","ELECTRO","EST","PRATIQUE","MEL","DESSIN","ANGLAIS"],
-            "2NDE FC":  ["FRANÇAIS","ANGLAIS","MATH","EPS","PHYSIQUE","HIST-GÉO","PHYSIQUE APPLIQUE","AUTOMATISME","DESSIN","ELECTRO DE BASE"],
-            "1ÈRE HR":  ["FRANÇAIS","ANGLAIS","MATH","TC","SAAH","ECONOMAT","TRB","DROIT","MERCATIQUE","COMPTABILITE"],
-            "2NDE F3":  ["FRANÇAIS","ANGLAIS","MATH","PCT","TECHNO","SCHÉMA","DESSIN","ELECTRO","PRATIQUE","MEL"]
-        };
+    const MATIERES = {
+        "1ÈRE F4": ["FRANÇAIS","ANGLAIS","MATH","PCT","RDM","PE","DESSIN","SMC","TP","METRE","HYGIENE","PC"],
+        "2NDE F4": ["FRANÇAIS","ANGLAIS","MATH","PHYSIQUE","DESSIN","INFORMATIQUE","TM/TC","TP","MECANIQUE","PREVENTION","LEGIS"],
+        "TLE F4":  ["FRANÇAIS","ANGLAIS","MATH","PCT","RDM","PE","DESSIN","METRE","PC","BA","TP","LEGIS"],
+        "2NDE IMI": ["FRANÇAIS","ANGLAIS","MATH","EB","LA","AS","SEV","SER","ALGO","MATH APPLIQUE","LEGIS"],
+        "TLE IMI":  ["FRANÇAIS","ANGLAIS","MATH","EB","RESEAU","RP","MATH APPLIQUÉ","LEGIS","BD","PG","ELEC"],
+        "TLE F3":   ["FRANÇAIS","ANGLAIS","MATH","PHYSIQUE","ELECTRO","EST","PRATIQUE","MEL","DESSIN","ANGLAIS"],
+        "2NDE FC":  ["FRANÇAIS","ANGLAIS","MATH","EPS","PHYSIQUE","HIST-GÉO","PHYSIQUE APPLIQUE","AUTOMATISME","DESSIN","ELECTRO DE BASE"],
+        "1ÈRE HR":  ["FRANÇAIS","ANGLAIS","MATH","TC","SAAH","ECONOMAT","TRB","DROIT","MERCATIQUE","COMPTABILITE"],
+        "2NDE F3":  ["FRANÇAIS","ANGLAIS","MATH","PCT","TECHNO","SCHÉMA","DESSIN","ELECTRO","PRATIQUE","MEL"]
+    };
 
-        const liste = MATIERES[classe] || [];
-        if (liste.length === 0) return;
+    const liste = MATIERES[classe] || [];
+    if (liste.length === 0) return;
 
-        tbody.innerHTML = liste.map(m => `
-            <tr>
-                <td class="text-start fw-bold">${m}</td>
-                <td>—</td><td>—</td><td>—</td><td>—</td>
-                <td class="bg-light fw-bold">—</td>
-                <td>—</td><td>—</td>
-                <td class="bg-light fw-bold">—</td>
-                <td><span class="badge bg-secondary">—</span></td>
-                <td class="text-start">—</td>
-            </tr>
-        `).join("");
-    });
+    tbody.innerHTML = liste.map(m => `
+        <tr>
+            <td class="text-start fw-bold">${m}</td>
+            <td>—</td><td>—</td><td>—</td><td>—</td>
+            <td class="bg-light fw-bold">—</td>
+            <td>—</td><td>—</td>
+            <td class="bg-light fw-bold">—</td>
+            <td><span class="badge bg-secondary">—</span></td>
+            <td class="text-start">—</td>
+        </tr>
+    `).join("");
+});
 </script>
 </html>
