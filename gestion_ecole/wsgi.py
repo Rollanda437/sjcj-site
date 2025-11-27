@@ -1,12 +1,7 @@
-
-"""
-WSGI config for gestion_ecole project.
-Vercel exige que la variable s'appelle exactement « app »
-"""
-
+# gestion_ecole/wsgi.py → VERSION QUI MARCHE À 100%
 import os
 from django.core.wsgi import get_wsgi_application
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'gestion_ecole.settings')
 
-app = get_wsgi_application()
+application = get_wsgi_application()
