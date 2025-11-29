@@ -1,18 +1,18 @@
 import os
 import django
 import csv
-
-# --- AJOUTER CES LIGNES ---
-# 1. Configurer l'environnement de votre projet Django
-# Remplacez 'votre_projet.settings' par le chemin réel de votre fichier settings.py
+# Assurez-vous d'avoir le bon chemin ici
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'gestion_ecole.settings') 
 django.setup()
-
-# 2. Importer les modèles après django.setup()
 from eleves.models import Eleves, Classe 
-# -------------------------
+# --- ÉTAPE DE SUPPRESSION AJOUTÉE ---
+print("Suppression des anciennes données...")
+Eleves.objects.all().delete()
+Classe.objects.all().delete() # Facultatif, si vous voulez remettre les classes à zéro
 
-nombre_eleves_traites = 0
+# --- Votre code d'importation ---
+nombre_eleves_traites = 0 
+# ... le reste du code de votre script ...
 
 with open('eleves_import.csv', 'r', encoding='utf-8') as f:
     reader = csv.DictReader(f)
